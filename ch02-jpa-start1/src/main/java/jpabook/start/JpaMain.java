@@ -4,13 +4,14 @@ import javax.persistence.*;
 import java.util.List;
 
 /**
- * @author holyeye
+ * @author suman
  */
 public class JpaMain {
 
     public static void main(String[] args) {
 
         //엔티티 매니저 팩토리 생성
+        //persistence.xml에서 persistence-unit을 찾으므로 jpabook
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("jpabook");
         EntityManager em = emf.createEntityManager(); //엔티티 매니저 생성
 
