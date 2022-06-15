@@ -3,8 +3,8 @@ package jpabook.start;
 import javax.persistence.*;  //**
 
 /**
- * User: HolyEyE
- * Date: 13. 5. 24. Time: 오후 7:43
+ * User: suman
+ * Date: 22. 6. 13. Time: 오후 9:42
  */
 @Entity
 @Table(name="MEMBER")
@@ -17,6 +17,7 @@ public class Member {
     @Column(name = "NAME")
     private String username;
 
+    @Column(name = "AGE")
     private Integer age;
 
     public String getId() {
