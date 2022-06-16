@@ -39,8 +39,8 @@ public class JpaMain {
         String id = "id1";
         Member member = new Member();
         member.setId(id);
-        member.setUsername("지한");
-        member.setAge(2);
+        member.setUsername("suman");
+        member.setAge(30);
 
         //등록
         em.persist(member);
