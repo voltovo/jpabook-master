@@ -9,14 +9,18 @@ import javax.persistence.*;  //**
  * Date: 22. 6. 13. Time: 오후 9:42
  */
 @Entity
-@Table(name="MEMBER")
+@Table(name="MEMBER", uniqueConstraints = {@UniqueConstraint(
+    name = "NAME_AGE_UNIQUE",
+    columnNames = {"NAME", "AGE"}
+)})
 public class Member {
 
     @Id
     @Column(name = "ID")
     private String id;
 
-    @Column(name = "NAME")
+    //회원 이름은 필수, 10자 초과 금지 조건 추가
+    @Column(name = "NAME", nullable = false, length = 10)
     private String username;
 
     @Column(name = "AGE")
