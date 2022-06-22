@@ -26,10 +26,8 @@ public class Member {
     @Enumerated(EnumType.STRING)
     private RoleType roleType;
 
-    @Temporal(TemporalType.TIMESTAMP)
     private LocalDate createdDate;
 
-    @Temporal(TemporalType.TIMESTAMP)
     private LocalDate lastModifiedate;
     
     //회원을 설명하는 필드의 길이 제한이 없다.
