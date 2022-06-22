@@ -268,3 +268,21 @@ List< Member> members = query.getResultList();</code></pre>
 <pre><code>Member mergeMember = em.merge(member);</code></pre>
 
 ## 엔티티 매핑
+JPA를 사용하는데 가장 중요한 일은 엔티티와 테이블을 정확하게 매핑하는 것이다.
+
+* 객체와 테이블 매핑 : @Entity, @Table
+* 기본 키 매핑 : @Id
+* 필드와 컬럼 매핑 : @Column
+* 연관관계 매핑 : @ManyToOne, @JoinColumn   
+
+매핑 정보는 XML이나 어노테이션 중에 선택해서 기술하면 된다. 각각 장단점이 있지만 어노테이션을 사용하는 쪽이 좀 더 쉽고 직관적이다.
+
+### @Entity
+@Entity가 붙은 클래스는 JPA가 관리하는 것으로, 엔티티라고 부른다.   
+적용 시 주의 사항
+* 기본 생성자는 필수다 (파라미터가 없는 public or protected 생성자)
+* final 클래스, enum, interface, inner 클래스에는 사용 할 수 없다.
+* 저장할 필드에 final을 사용하면 안 된다.
+
+### @Table
+@Table은 엔티티와 매핑할 테이블을 지정한다.
