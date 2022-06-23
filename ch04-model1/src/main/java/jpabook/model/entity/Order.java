@@ -1,6 +1,8 @@
 package jpabook.model.entity;
 
 import javax.persistence.*;
+
+import java.time.LocalDate;
 import java.util.Date;
 
 /**
@@ -18,8 +20,7 @@ public class Order {
     @Column(name = "MEMBER_ID")
     private Long memberId;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date orderDate;     //주문시간
+    private LocalDate orderDate;     //주문시간
 
     @Enumerated(EnumType.STRING)
     private OrderStatus status;//주문상태
@@ -41,14 +42,6 @@ public class Order {
         this.memberId = memberId;
     }
 
-    public Date getOrderDate() {
-        return orderDate;
-    }
-
-    public void setOrderDate(Date orderDate) {
-        this.orderDate = orderDate;
-    }
-
     public OrderStatus getStatus() {
         return status;
     }
@@ -56,4 +49,13 @@ public class Order {
     public void setStatus(OrderStatus status) {
         this.status = status;
     }
+
+    public LocalDate getOrderDate() {
+        return this.orderDate;
+    }
+
+    public void setOrderDate(LocalDate orderDate) {
+        this.orderDate = orderDate;
+    }
+   
 }
