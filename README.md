@@ -457,3 +457,50 @@ mappedBy : 양방향 매핑일 때 사용하는 반대쪽 매핑의 필드 이�
 
 **사실 외래키 관리자가 연관관계 주인이 되는 것이다.**   
 데이터베이스 테이블의 다대일, 일대다 관계에서는 항상 다 쪽이 외래 키를 가진다. 다 쪽인 @ManyToOne은 항상 연관관계의 주인이 되므로 mappedBy를 설정할 수 없다, 따라서 @ManyToOne에는 mappedBy속성이 없다.
+
+#### 연관관계 편의 메소드
+양방향 관계에서는 두 코드는 하나의 것처럼 사용하는 것이 안전하다.   
+Member클래스의 setTeam() 메소드를 수정해서 코드를 리팩토링.
+<pre><code>
+public class Member{
+  private Team team;
+
+  public void setTeam(Team team){
+    this.team = team;
+    team.getMembers().add(this);
+  }
+}
+</code></pre>
+setTeam()메소드 하나로 양방향 관계를 모두 설정
+
+#### 연관관계 편의 메소드 작성시 주의 사항
+team을 변경하게되면 이전 연관관계가 제게 되지 않고 있다.
+<pre><code>
+member1.setTeam(teamA); //1
+member2.setTeam(teamB); //2
+Member findMember = teamA.getMember();  //Member1이 여전히 조회된다.
+</code></pre>
+
+따라서 기존 연관 관계를 삭제하는 코드 추가가 필요하다.
+<pre><code>
+public class Member{
+  private Team team;
+
+  public void setTeam(Team team){
+    //기존 팀과 관계를 제거
+    if(this.team != null){
+      this.team.getMembers().remove(this);
+    }
+    this.team = team;
+    team.getMembers().add(this);
+  }
+}
+</code></pre>
+
+#### 양방형 연관관계 정리
+* 단방향 매핑만으로 테이블과 객체의 연관관계 매핑은 이미 완료
+* 단방향을 양방향으로 만들면 반대방향으로 객체 그래프 탐색 기능이 추가
+* 양방향 연관관계를 매핑하려면 객체에서 양쪽 방향을 모두 관리해야 한다.
+
+양방향 매핑 시에는 무한 루푸에 빠지지 않게 조심해야 한다. Member.toString()에서 getTeam()을 호출하고 Team.toString()에서 getMember()를 호출하면 무한 루푸에 빠질 수 있다.   
+이런 문제는 엔티티를 JSON으로 변환할 때와 Lombok라이브러리를 사용할 때 자주 발생한다.
