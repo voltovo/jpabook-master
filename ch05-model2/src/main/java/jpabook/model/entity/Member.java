@@ -71,4 +71,12 @@ public class Member {
     public void setOrders(List<Order> orders) {
         this.orders = orders;
     }
+
+    public void addOrders(Order order){
+        this.orders.add(order);
+        //무한 루프에 빠지지 않도록 체크
+        if(order.getMember() != this){
+            order.setMember(this);
+        }
+    }
 }

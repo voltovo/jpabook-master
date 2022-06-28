@@ -35,8 +35,11 @@ public class Order {
         if (this.member != null) {
             this.member.getOrders().remove(this);
         }
-        this.member = member;
-        member.getOrders().add(this);
+        // 무한루프에 빠지지 않도록 체크
+        if(!member.getOrders().contains(this)){
+            this.member = member;
+            member.getOrders().add(this);
+        }
     }
 
     public void addOrderItem(OrderItem orderItem) {
