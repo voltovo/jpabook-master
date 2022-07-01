@@ -534,3 +534,6 @@ public class Member{
 * @JoinTable.name : 연결 테이블을 지정한다.
 * @JoinTable.joinColumns : 현재 방향인 회원관 매핑할 조인 컬럼 정보를 지정한다.
 * @JoinTable.inverseJoinColumns : 반대 방향인 상품과 매핑할 조인 컬럼 정보를 지정한다.
+
+### 다대다: 양방향
+다대다 매핑이므로 @ManyToMany를 사용. 양쪽에 원하는 곳에 mappedBy로 연관관계의 주인을 지정.(mappedBy가 없는 곳이 연관관계의 주인) 
