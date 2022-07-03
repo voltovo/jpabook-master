@@ -556,3 +556,22 @@ JPA에서 복합 키를 사용하려면 별도의 식별자 클래스를 만들�
 부모 테이블의 기본 키를 받아서 자신의 기본키 + 외래 키로 사용하는 것을 식별 관계라고 한다.   
 
 ### 다대다: 새로운 기본 키 사용
+데이터베이스에서 자동으로 생성해주는 대리 키를 Long 값으로 사용하는 것이다.   
+장점: 거의 영구히 쓸 수 있으면 비즈니스에 의존하지 않는다. ORM 매핑 시에 복합 키를 만들지 않아도 되서 간단히 매핑을 완성할 수 있다.
+
+<pre><code>
+@Entity
+public class Order {
+
+    @Id @GeneratedValue
+    @Column(name = "ORDER_ID")
+    private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "MEMBER_ID")
+    private Member member;      //주문 회원
+
+    @ManyToOne
+    @JoinColumn(name = "PRODUCT_ID")
+    private Product product;
+</code></pre>
