@@ -20,10 +20,11 @@ public class Order {
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
-    @OneToMany
+    @OneToMany(mappedBy = "order")
     private List<OrderItem> orderItems = new ArrayList<OrderItem>();
 
     @OneToOne
+    @JoinColumn(name = "DELIVERY_ID")
     private Delivery delivery;
 
     private LocalDate orderDate;
@@ -43,6 +44,9 @@ public class Order {
         }
     }
 
+    public Member getMember() {
+        return this.member;
+    }
 
     public Long getId() {
         return this.id;
@@ -52,17 +56,15 @@ public class Order {
         this.id = id;
     }
 
-    public Member getMember() {
-        return this.member;
-    }
-
-
     public List<OrderItem> getOrderItems() {
         return this.orderItems;
     }
 
-    public void setOrderItems(List<OrderItem> orderItems) {
-        this.orderItems = orderItems;
+    public void addOrderItems(OrderItem orderItem) {
+        orderItems.add(orderItem);
+        if(orderItem.getOrder() != this){
+            orderItem.setOrder(this);
+        }
     }
 
     public Delivery getDelivery() {
@@ -71,6 +73,7 @@ public class Order {
 
     public void setDelivery(Delivery delivery) {
         this.delivery = delivery;
+        delivery.setOrder(this);
     }
 
     public LocalDate getOrderDate() {
