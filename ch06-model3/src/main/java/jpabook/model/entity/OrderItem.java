@@ -13,6 +13,8 @@ public class OrderItem {
     @Column(name = "ORDER_ITEM_ID")
     private Long id;
 
+    @ManyToOne
+    @JoinColumn(name = "ITEM_ID")
     private Item item;
 
     @ManyToOne
@@ -36,6 +38,7 @@ public class OrderItem {
     }
 
     public void setItem(Item item) {
+        // 단방향 처리
         this.item = item;
     }
 
