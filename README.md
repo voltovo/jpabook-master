@@ -627,3 +627,7 @@ ORM에서 이야기하는 상속 관계 매핑은 객체의 상속 구조와 데
 * 특징
 1. 구분 컬럼을 사용하지 않는다.
 2. DBA와 ORM 전문가 둘 다 추천하지 않는다. 다른 전략을 추천.
+
+### @MappedSuperclass
+부모 클래스는 테이블과 매핑하지 않고 부모 클래스를 상송 받는 자식 클래스에게 매핑 정보만 제공하고 싶으면 @MappedSuperclass를 사용한다.   
+@MappedSuperClass는 추상 클래스와 비슷하다 @Entity는 실제 테이블과 매핑되지만 @MappedSuperclass는 실제 테이블과는 매핑되지 않는다.
