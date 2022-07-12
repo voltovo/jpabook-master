@@ -631,3 +631,12 @@ ORM에서 이야기하는 상속 관계 매핑은 객체의 상속 구조와 데
 ### @MappedSuperclass
 부모 클래스는 테이블과 매핑하지 않고 부모 클래스를 상송 받는 자식 클래스에게 매핑 정보만 제공하고 싶으면 @MappedSuperclass를 사용한다.   
 @MappedSuperClass는 추상 클래스와 비슷하다 @Entity는 실제 테이블과 매핑되지만 @MappedSuperclass는 실제 테이블과는 매핑되지 않는다.
+
+* @AttributeOverrides, @AttributeOverrid : 부모로부터 물려받은 매핑 정보 재정의시 사용
+* @AssociationOverrides, @AssociationOverride : 부모로부터 물려받은 연관관계를 재정의시 사용
+* 특징   
+1. 테이블과 매핑되지 않고 자식 클래스에 엔티티의 매핑 정보를 상속하기 위해 사용.
+2. @MappedSuperclass로 지정한 클래스는 엔티티가 아니므로 em.find()나 JPQL에서 사용할 수 없다.
+3. 클래스를 직접 생성해서 사용할 일은 거의 없으므로 추상 클래스로 만드는것을 권장한다.   
+
+**@MappedSuperclass는 테이블과는 관계가 없고 단순히 엔티티가 공통으로 사용하는 매핑 정보를 모아주는 역할을 한다.**
