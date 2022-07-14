@@ -684,3 +684,25 @@ em.createQuery("select p.id1, p.id2 from Parent p"); //IdClass
 #### 복합 키 : 식별 관계 매핑
 
 <img src="/img/식별관계매핑.png">
+부모, 자식, 손자까지 계속 기본 키를 전달하는 식별 관계이다.
+
+#### @IdClass와 식별 관계
+기본 키와 외래 키를 같이 매핑해야 한다. 식별자 매핑인 @Id와 연관관계 매핑인 @ManyToOne을 같이 사용.   
+<pre><code>
+@Id
+@ManyToOne
+@JoinColumn(name = "PARENT_ID")
+public Parent parent;
+</code></pre>
+
+#### @EmbeddedId와 식별 관계
+@EmbeddedId로 식별 관계를 구성할 때는 @MapsId를 사용해야 한다.   
+<pre><code>
+@MapsId("parentId")
+@ManyToOne
+@JoinColumn(name = "PARENT_ID")
+public Parent parent;
+</code></pre>
+@Id 대신에 @MapsId를 사용한다는 점이 @IdClass와 다른 점이다.   
+@MapsId는 외래키와 매핑한 연관관계를 기본 키에도 매핑하겠다는 뜻이다.
+
