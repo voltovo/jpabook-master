@@ -672,3 +672,14 @@ JPA는 복합 키를 지원하기 위해 @IdClass와 @EmbeddedId 2가지 방법�
 
 #### 복합 키와 equals(), hashCode()
 영속성 컨텍스트는 엔티티와 식별자를 키로 사용해서 엔티티를 관리한다. 식별자를 비교할 때는 equals()와 hashCode()를 사용한다. 따라서 식별자 객체의 동등성(equals 비교)이 지켜지지 않으면 예상과 다른 엔티티가 조회되거나 엔티티를 찾을 수 없는 등 영속성 컨텍스트가 엔티티를 관리하는 데 심각한 문제가 발생한다. **따라서 복합 키는 equals()와 hashCode()를 필수로 구현해야 한다.**
+
+#### @IdClass VS @EmbeddedId
+@EmbeddedId가 @IdClass와 비교해서 더 객체지향적이고 중복도 없어서 좋아 보이지만 특정 상황에 JPQL이 조금 더 길어 질 수도 있다.
+<pre><code>
+em.createQuery("select p.id.id1, p.id.id2 from Parent p"); //EmbeddedId
+em.createQuery("select p.id1, p.id2 from Parent p"); //IdClass
+</code></pre>
+**복합 키에는 @generateValue를 사용할 수 없다.**
+
+#### 복합 키 : 식별 관계 매핑
+
