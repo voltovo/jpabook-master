@@ -660,3 +660,15 @@ JPA는 복합 키를 지원하기 위해 @IdClass와 @EmbeddedId 2가지 방법�
 4. 기본 생성자가 있어야 한다.
 5. 식별자 클래스는 public이어야 한다.
 
+<img src="/img/idClass.png">
+
+#### @EmbeddeId
+@IdClass가 데이터베이스에 맞춘 방법이라면 @EmbeddedId는 좀 더 객체지향적인 방법이다.   
+1. @EmbeddedId 어노테이션을 붙여주어야 한다.
+2. Serializable 인터페이스를 구현해야 한다.
+3. equals, hashCode를 구현해야 한다.
+4. 기본 생성자가 있어야 한다.
+5. 식별자 클래스는 public이어야 한다.
+
+#### 복합 키와 equals(), hashCode()
+영속성 컨텍스트는 엔티티와 식별자를 키로 사용해서 엔티티를 관리한다. 식별자를 비교할 때는 equals()와 hashCode()를 사용한다. 따라서 식별자 객체의 동등성(equals 비교)이 지켜지지 않으면 예상과 다른 엔티티가 조회되거나 엔티티를 찾을 수 없는 등 영속성 컨텍스트가 엔티티를 관리하는 데 심각한 문제가 발생한다. **따라서 복합 키는 equals()와 hashCode()를 필수로 구현해야 한다.**
