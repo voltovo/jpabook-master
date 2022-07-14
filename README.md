@@ -683,3 +683,4 @@ em.createQuery("select p.id1, p.id2 from Parent p"); //IdClass
 
 #### 복합 키 : 식별 관계 매핑
 
+<img src="/img/식별관계매핑.png">
