@@ -753,5 +753,17 @@ ORM 신규 프로젝트 진행 시 추천하는 방법은 **비식별 관계를 
 * 객체와 테이블을 매핑할 때 조인 컬럼은 @JoinColumn으로 매핑하고 조인 테이블은 @JoinTable으로 매핑한다.
 * 조인 테이블은 주로 다대다 관계를 일대다, 다대일 관계로 풀어내기 위해 사용한다.
 
+#### 일대일 조인 테이블
+부모 엔티티에 @JoinColumn 대신에 @JoinTable을 사용   
+* name: 매핑할 조인 테이블 이름
+* joinColumns: 현재 엔티티를 참조하는 외래 키
+* inverseJoinColumns: 반대방향 엔티티를 참조하는 외래 키
 
+양방향으로 매핑하려면 다음 코드를 추가   
+<pre><code>
+public class Child{
+  @OneToOne(mappedBy="child")
+  private Parent parent;
+}
+</code></pre>
 
