@@ -767,3 +767,10 @@ public class Child{
 }
 </code></pre>
 
+### 엔티티 하나에 여러 테이블 매핑
+@SecondaryTable을 사용하면 한 엔티티에 여러 테이브을 매핑할 수 있다.   
+* @SecondaryTable.name : 매핑할 다른 테이블의 이름, 예제에서는 테이블명을 BOARD_DETAIL로 지정.
+* @SecondaryTable.pkJoinColumns : 매핑할 다른 테이블의 기본 키 컬럼 속성, 예제에서는 기본 키 컬럼명을 BOARD_DETAIL_ID로 지정.    
+@SecondaryTable을 사용해서 두 테이블을 하나의 엔티티에 매핑하는 방법보다는 테이블당 엔티티를 각각 만들어서 일대일 매핑하는것을 권장한다.
+
+
