@@ -774,3 +774,27 @@ public class Child{
 @SecondaryTable을 사용해서 두 테이블을 하나의 엔티티에 매핑하는 방법보다는 테이블당 엔티티를 각각 만들어서 일대일 매핑하는것을 권장한다.
 
 
+## 프록시와 연관관계 관리
+### 프록시
+엔티티를 조회할 때 연관된 엔티티들이 항상 사용되는것이 아니다.
+
+* 회원과 팀 정보를 출력
+<pre><code>
+public void printUserAndTeam(String memeberId){
+  Member member = em.find(Member.class, memberId);
+  Team team = member.getTeam();
+  System.out.println("회원이름: " + member.getUsername());
+  System.out.println("소속팀: " + team.getName());
+}
+</code></pre>
+* 회원 정보만 출력
+<pre><code>
+public String printUser(String memeberId){
+  Member member = em.find(Member.class, memberId);
+  System.out.println("회원이름: " + member.getUsername());
+}
+</code></pre>
+
+printUser()메소드는 회원 엔티티만 사용하므로 em.find()로 회원 엔티티를 조회할 때 회원과 연관된 팀 엔티티(Member.team)까지 데이터베이스에서 함꼐 조회해 두는 것은 효율성이 떨어진다. 그래서 team.getName()처럼 팀 엔티티의 값을 실제 사용하는 시점에 데이터베이스에서 조회하는 것이다. 이것이 지연로딩이다.
+* 지연로딩 : 엔티티가 실제 사용될 때까지 데이터베이스 조회를 지연하는 방법.
+* 프록시 : 지연 로딩 기능을 사용하려면 실제 엔티티 객체 대신에 데이터베이스 조회를 지연할 수 있는 가짜 객체이다.
