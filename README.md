@@ -834,3 +834,11 @@ member.setTeam(team);
 연관관계를 설정할 때는 식별자 값만 사용하므로 프록시를 사용하면 데이터베이스 접근 횟수를 줄일 수 있다.
 
 #### 프록시 확인
+PersistenceUnitUtil.isLoaded(Object entity)메소드를 사용하면 프록시 인스턴스의 초기화 여부를 확인 할 수 있다.   
+조회한 엔티티가 진짜 엔티티인지 프록시로 조회한 것인지 확인하려면 클래스명을 직접 호출해보면 된다.
+<pre><code>
+System.out.println("memberProxy = " + member.getClass().getName());
+// 결과 : memberProxy = jpabook.domain.Member_$$javassist_0 
+//javassist = 프록시
+</code></pre>
+**프록시 강제 초기화 : JPA에 표준에는 프록시 강제 초기화 메소드가  따로 없기 때문에 member.getName()처럼 프록시의 메소드를 직접 호출하면 된다.**
