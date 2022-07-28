@@ -861,3 +861,18 @@ Team team = member.getTeam(); //객체 그래프 탐색
 @ManyToOne.optional = false 으로도 내부 조인 사용 가능
 
 외부 조인보다 내부 조인이 성능과 최적화에서 더 유리하다. 하지만 JPA가 기본적으로 null을 허용하기 위해서 외부 조인을 사용한다. 그러므로 필수 관계를 JPA에 알려줘서 내부 조인을 사용하도록 하자.
+
+#### 지연 로딩
+사용방법 : @ManyToOne의 fetch속성을 FetchType.LAZY로 지정
+<pre><code>
+Member member = em.find(Member.class, "member1");
+Team team = member.getTeam(); //객체 그래프 탐색
+team.getName(); //팀 객체 실제 사용
+</code></pre>
+em.find()만 호출할 때는 회원만 조회하고 팀은 조회하지 않는다. 대신에 team 멤버변수에 프록시 객체를 넣어둔다.
+<pre><code>
+Team team = member.getTeam(); //프록시 객체
+</code></pre>
+반환된 팀 객체는 프록시 객체다. 이 프록시 객체는 실제 사용될 떄까지 데이터로딩을 미룬다.   
+**실제 데이터가 필요한 순간에 데이터베이스를 조회해서 프록시 객체를 초기화한다.**   
+_조회 대상이 영속성 컨텍스트에 이미 있으면 프록시 객체를 사용하지 않고 진짜 엔티티를 사용한다._
