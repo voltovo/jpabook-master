@@ -842,3 +842,22 @@ System.out.println("memberProxy = " + member.getClass().getName());
 //javassist = 프록시
 </code></pre>
 **프록시 강제 초기화 : JPA에 표준에는 프록시 강제 초기화 메소드가  따로 없기 때문에 member.getName()처럼 프록시의 메소드를 직접 호출하면 된다.**
+
+### 즉시 로딩과 지연 로딩
+* 즉시로딩 : 엔티티를 조회할 때 연관된 엔티티도 함께 조회
+* 지연로딩 : 연관된 엔티티를 실제 사용할 때 조회
+
+#### 즉시 로딩
+사용방법 : @ManyToOne의 fetch속성을 FetchType.EAGER로 지정
+<pre><code>
+Member member = em.find(Member.class, "member1");
+Team team = member.getTeam(); //객체 그래프 탐색
+</code></pre>
+회원을 조회하는 순간 팀도 함꼐 조회된다. 이 때 두 테이블을 조회해서 쿼리가 2번 실행될 것 같지만, 대부분의 JPA 구현체는 **즉시 로딩을 최적화하기 위해 가능하면 조인 쿼리를 사용한다.** 그래서 쿼리 한 번으로 두 엔티티를 모두 조회한다.
+
+#### JPA 내부 조인 설정
+@JoinColumn(nullable = true): NULL 허용(기본값), 외부 조인 사용   
+@JoinColumn(nullable = false): NULL 허용하지 않음, 내부 조인 사용
+@ManyToOne.optional = false 으로도 내부 조인 사용 가능
+
+외부 조인보다 내부 조인이 성능과 최적화에서 더 유리하다. 하지만 JPA가 기본적으로 null을 허용하기 위해서 외부 조인을 사용한다. 그러므로 필수 관계를 JPA에 알려줘서 내부 조인을 사용하도록 하자.
