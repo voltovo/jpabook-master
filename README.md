@@ -965,3 +965,16 @@ em.remove(findParent);
 </code></pre>
 이렇게 하면 부모와 자식 엔티티가 함께 삭제가 된다. 삭제 순서는 외래 키 제약조건을 고려해서 자식을 먼저 삭제하고 부모를 삭제한다. 만약 CascadeType.REMOVE을 설정하지 않고 위의 코드를 실행하면 **부모 엔티티만 삭제된다.** 하지만 부모 로우를 삭제하는 순간 자식 테이블에 걸려 있는 외래 키 제약조건으로 인해, 데이터베이스에서 외래 키 무렬성 예외가 발생한다.
 
+#### CASCADE의 종류
+<pre><code>
+public enum CascadeType{
+  ALL,    //모두 적용
+  PERSIST,  //영속
+  MERGE,    //병합
+  REMOVE,   //삭제
+  REFRESH,  //리프레쉬
+  DETACH    //분리
+}
+</code></pre>
+여러 속성을 같이 사용하는 것도 가능하다.    
+참고로 PERSIST, REMOVE는 em.persist(), em.remove()를 실행할 때 바로 전이가 발생하지 않고 플러시를 호출할 때 전이가 발생한다.
