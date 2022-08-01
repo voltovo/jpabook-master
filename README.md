@@ -882,7 +882,7 @@ _조회 대상이 영속성 컨텍스트에 이미 있으면 프록시 객체를
 필요할 때마다 SQL을 실행해서 연관된 엔티티를 지연 로딩하는 것도 최적화 관점에서 좋은 것만은 아니다.   
 **결국 연관된 엔티티를 즉시 로딩하는 것이 좋은지 아니면 실제 사용할 때까지 지연해서 로딩하는 것이 좋은지는 상황에 따라 다르다.** 직접 개발을 하면서 맞춰 나가는 수 밖에 없다.
 
-### 지연로딩 활요
+### 지연로딩 활용
 #### 프록시와 컬렉션 래퍼
 컬렉션 래퍼 : 하이버네이트는 엔티티를 영속 상태로 만들 때 엔티티에 컬렉션이 있으면 컬렉션을 추적 후 관리할 목적으로 원본 컬렉션을 하이버네이트가 제공하는 내장 컬렉션으로 변경하는 것.   
 컬렉션 래퍼도 프록시 역할을 하므로 호출 시 프록시를 부른다.
@@ -897,7 +897,7 @@ JPA의 기본 페치 전략은 연관된 엔티티가 하나면 **즉시 로딩*
 
 #### 컬렉션에 FetchType.EAGER 사용 시 주의점
 * 컬렉션을 하나 이상 즉시 로딩하는 것을 권장하지 않는다.    
-JPA는 조회된 결화를 메모리에서 필터링해서 반환을 하는데, 한번에 너무 많은 데이터를 조회하면 성능이 저하 될 수 있다.
+JPA는 조회된 결고ㅏ를 메모리에서 필터링해서 반환을 하는데, 한번에 너무 많은 데이터를 조회하면 성능이 저하 될 수 있다.
 * 컬렉션 즉시 로딩은 항상 외부 조인(OUTER JOIN)을 사용한다.   
 다대일 관계인 회원 테이블과 팀 테이블을 조인할 떄 회원 테이블의 외래 키에 not null 제약조건을 걸어두면 모든 회원은 팀에 소속되므로 항상 내부 조인을 사용해도 된다. 반대로 팀 테이블에서 회원 테이블로 일대다 관계를 조인할 때 회읜이 한 명도 없는 팀을 내부 조인하면 팀까지 조회되지 않는 문제가 발생한다. 그래서 **JPA는 일대다 관계를 즉시 로딩할 때 항상 외부 조인을 사용**한다.
 
@@ -907,3 +907,51 @@ JPA는 조회된 결화를 메모리에서 필터링해서 반환을 하는데, 
 * @OneToMany, @ManyToMany   
 (optional = false) : 외부 조인   
 (optional = true) : 외부 조인
+
+### 영속성 전이 : CASCADE
+영속성 전이(transitive persistence): 특정 엔티티를 영속 상태로 만들 때 연관된 엔티티도 함께 영속 상태로 만들고 싶을 때 사용. JPA는 CASCADE옵션으로 영속성 전이를 제공   
+만약 부모 1명이 자식 2명을 저장한다면
+<pre><code>
+//부모 저장
+Parent parent = new Parent();
+em.persist(parent);
+
+//1번 자식 저장
+Child child1 = new Child();
+child1.setParent(parent); // 자식 -> 부모 연관관계 설정
+parent.getChildren().add(child1); //부모 -> 자식
+em.persist(child1);
+
+//2번 자식 저장
+Child child2 = new Child();
+child2.setParent(parent); // 자식 -> 부모 연관관계 설정
+parent.getChildren().add(child2); //부모 -> 자식
+em.persist(child2);
+</code></pre>
+**JPA에서 엔티티를 저장할 때 연관된 모든 엔티티는 영속 상태여야 한다.** 그래서 각각 영속 상태로 만들고 있는데, 이럴 떄 영속성 전이를 사용해서 부모만 영속 상태로 만들면 연관된 자식까지 한 번에 영속 상태로 만들 수 있다.
+
+#### 영속성 전이 : 저장
+<pre><code>
+@Entity
+public class Parent{
+  @OneToMany(mappedBy = "parent", cascade = CascadeType.PERSIST)
+  private List< Child> children = new ArrayList< Child>();
+}
+</code></pre>
+cascade = CascadeType.PERSIST 옵션을 적용하면 부모와 자식 엔티티를 한 번에 영속화할 수 있다.
+
+<pre><code>
+Child child1 = new Child();
+Child child2 = new Child();
+
+Parent parent = new Parent();
+child1.setParent(parent); //연관관계 추가
+child2.setParent(parent); //연관관계 추가
+parent.getChildren().add(child1);
+parent.getChildren().add(child2);
+
+//부모 저장, 연관된 자식들 저장
+em.persist(parent);
+</code></pre>
+
+영속성 전이는 연관관계를 매핑하는 것과는 아무런 관련이 없다. 단지 **엔티티를 영속화할 때 연관된 엔티티도 같이 영속화하는 편리함을 제공**할 뿐이다.
