@@ -1028,3 +1028,15 @@ String
 * 임베디드 타입(복합 값 타입)
 * 컬렉션 값 타입
 
+### 기본값 타입
+<pre><code>
+@Entity
+public class Member{
+  @Id @GeneratedValue
+  private Long id;
+
+  private String name;
+  private int age;
+}
+</code></pre>
+값 타입인 name, age 속성은 식별자 값도 없고 생명주기도 회원 엔티티에 의존한다. 따라서 회원 엔티티 인스턴스를 제거하면 name, age 값도 제거된다. 그리고 값 타입은 공유하면 안된다. 
