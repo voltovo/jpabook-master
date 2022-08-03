@@ -978,3 +978,29 @@ public enum CascadeType{
 </code></pre>
 여러 속성을 같이 사용하는 것도 가능하다.    
 참고로 PERSIST, REMOVE는 em.persist(), em.remove()를 실행할 때 바로 전이가 발생하지 않고 플러시를 호출할 때 전이가 발생한다.
+
+### 고아 객체
+고아 객체 제거: JPA는 부모 엔티티와 연관관계가 끊어진 자식 엔티티를 자동으로 삭제하는 기능    
+**부모 엔티티의 컬렉션에서 자식 엔티티의 참조만 제거하면 자식 엔티티가 자동으로 삭제** 된다.
+<pre><code>
+@Entity
+public class Parent{
+  @Id @GeneratedValue
+  private Long id;
+
+  @OneToMany(mappedBy = "parent", orphanRemoval = true)
+  private List< Child> children = new ArrayList< Child>();
+}
+</code></pre>
+위의 방법으로 설정을 한 후 
+<pre><code>
+Parent parent1 = em.find(Parent.class, id);
+parent1.getChildren().remove(0);  // 자식 엔티티를 컬렉션에서 제거
+</code></pre>
+컬렉션에서 엔티티를 제거하면 데이터베이스의 데이터도 삭제된다. 고아 객체 제거 기능은 영속성 컨텍스트를 플러시할 때 적용되므로 플러시 시점에 DELETE SQL이 실행된다.   
+모든 자식 엔티티를 제거 방법
+<pre><code>
+parent1.getChildren().clear();
+</code></pre>
+참조가 제거된 엔티티는 다른 곳에서 참조하지 않는 고아 객체로 보고 삭제하는 기능이다. 그래서 참조하는 곳이 하나일 떄만 사용해야 한다. 만약 삭제한 엔티티를 다른 곳에서도 참조한다면 문제가 발생할 수 있다. 이런 이유로 **@OneToOne, @OneToMany에만 사용 가능**하다.
+
