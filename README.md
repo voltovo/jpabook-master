@@ -1004,3 +1004,17 @@ parent1.getChildren().clear();
 </code></pre>
 참조가 제거된 엔티티는 다른 곳에서 참조하지 않는 고아 객체로 보고 삭제하는 기능이다. 그래서 참조하는 곳이 하나일 떄만 사용해야 한다. 만약 삭제한 엔티티를 다른 곳에서도 참조한다면 문제가 발생할 수 있다. 이런 이유로 **@OneToOne, @OneToMany에만 사용 가능**하다.
 
+### 영속성 전이 + 고아 객체, 생명주기
+CascadeType.ALL + orphanRemoval = true를 동시에 사용하면 어떻게 될까?   
+부모 엔티티를 통해서 자식의 생명주기를 관리할 수 있다    
+자식을 저장하려면 부모만 등록하면 된다.
+<pre><code>
+Parent parent = em.find(Parent.class, parentId);
+parent.addChild(child1);
+</code></pre>
+자식을 삭제하려면 부모에서 제거하면 된다.
+<pre><code>
+Parent parent = em.find(Parent.class, parentId);
+parent.getChildren().remove(removeObject);
+</code></pre>
+
