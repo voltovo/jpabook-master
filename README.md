@@ -1018,3 +1018,13 @@ Parent parent = em.find(Parent.class, parentId);
 parent.getChildren().remove(removeObject);
 </code></pre>
 
+## 값 타입
+값 타입은 int, Integer, String처럼 단순히 값으로 사용하는 자바 기본 타입이나 객체를 말한다. 값 타입은 식별자가 없고 숫자나 문자같은 속성만 있으므로 추적할 수 없다.    
+값 타입 종류
+* 기본값 타입   
+자반 기본 타입(int, double ...)   
+래퍼 클래스((Integer ...)   
+String
+* 임베디드 타입(복합 값 타입)
+* 컬렉션 값 타입
+
