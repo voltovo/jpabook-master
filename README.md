@@ -1040,3 +1040,44 @@ public class Member{
 }
 </code></pre>
 값 타입인 name, age 속성은 식별자 값도 없고 생명주기도 회원 엔티티에 의존한다. 따라서 회원 엔티티 인스턴스를 제거하면 name, age 값도 제거된다. 그리고 값 타입은 공유하면 안된다. 
+
+### 임베디드 타입(복합 값 타입)
+임베디드 타입 : JPA에서는 새로운 값 타입을 직접 정의해서 사용 가능.    
+직접 정의한 임베디드 타입도 int, String처럼 값 타입이다.
+<pre><code>
+@Entity
+public class Member{
+  @Id @GeneratedValue
+  private Long id;
+  private String name;
+
+  @Embedded Period workPeriod;  //근무 기간
+  @Embedded Address homeAddress;  //집 주소
+}
+
+@Embeddable
+public class Period{
+  @Temporal(TemporalType.DATE) java.util.Date startDate;
+  @Temporal(TemporalType.DATE) java.util.Date endDate;
+
+  public boolean isWork(Date date){
+    //... 값 타입을 위한 메소드 정의
+  }
+}
+
+@Embeddable
+public class Address{
+  @Column(name="city")  //매핑할 컬럼 정의 가능
+  private String city;
+  private String street;
+  private String zipcode;
+}
+</code></pre>
+
+새로 정의한 값 타입들을 재사용할 수 있고 응집도도 아주 높다. 또한 isWork()처럼 해당 값 타입만 사용하는 의미 있는 메소드도 만들 수 있다.
+
+사용가능한 어노테이션. 둘 중 하나는 생략해도 된다.
+* @Embeddable : 값 타입을 정의하는 곳에 표시
+* @Embedded : 값 타입을 사용하는 곳에 표시
+
+임베디드 타입은 기본 생성자가 필수다. 모든 값 타입은 엔티티의 생명주기에 의존하므로 엔티티와 임베디드 타입의 관계를 UML로 표현하면 **컴포지션 관계**가 된다.
