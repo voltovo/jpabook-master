@@ -1086,3 +1086,26 @@ public class Address{
 <img src="/img/tableMapping.png">
 
 임베디드 타입 덕분에 객체와 테이블을 아주 세밀하게 매핑하는 것이 가능. 잘 설계한 ORM 애플리케이션은 매핑한 테이블의 수보다 클래스의 수가 더 많다.
+
+#### @AttributeOverride: 속성 재정의
+@AttributeOverride를 사용해서 임베디드 타입에 정의한 매핑정보를 재정의한다.
+<pre><code>
+@Entity
+public class Member{
+  @Id @GeneratedValue
+  private Long id;
+  private String name;
+
+  @Embedded Address homeAddress;
+
+  @Embedded
+  @AttributeOverrides({
+    @AttributeOverride(name="city", column=@Column(name="COMPANY_CITY")),
+    @AttributeOverride(name="street", column=@Column(name="COMPANY_STREET")),
+    @AttributeOverride(name="zipcode", column=@Column(name="COMPANY_ZIPCODE"))
+  })
+  Address companyAddress;
+}
+</code></pre>
+Member 엔티티에 집주소에 회사 주소를 하나 더 추가 하는 경우 @AttributeOverride를 사용해서 테이블에 매핑하는 컬럼명이 중복되는 것을 피할 수 있다.   
+@AttributeOverride를 사용하면 어노테이션을 너무 많이 사용해서 엔티티 코드가 지저분해진다. 다행히도 임베디드 타입을 중복해서 사용할 일은 많지 않다.
