@@ -1109,3 +1109,11 @@ public class Member{
 </code></pre>
 Member 엔티티에 집주소에 회사 주소를 하나 더 추가 하는 경우 @AttributeOverride를 사용해서 테이블에 매핑하는 컬럼명이 중복되는 것을 피할 수 있다.   
 @AttributeOverride를 사용하면 어노테이션을 너무 많이 사용해서 엔티티 코드가 지저분해진다. 다행히도 임베디드 타입을 중복해서 사용할 일은 많지 않다.
+
+#### 임베디드 타입과 null
+임베디드 타입이 null이면 매핑한 컬럼 값은 모두 null이 된다.
+<pre><code>
+member.setAddress(null);   //null 입력
+em.persist(member);
+</code></pre>
+회원 테이블의 주소와 관련된 CITY, ZIPCODE, STREET 컬럼 값은 모두 null이 된다.
