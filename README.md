@@ -1117,3 +1117,16 @@ member.setAddress(null);   //null 입력
 em.persist(member);
 </code></pre>
 회원 테이블의 주소와 관련된 CITY, ZIPCODE, STREET 컬럼 값은 모두 null이 된다.
+
+### 값 타입과 불변 객체
+#### 값 타입 공유 참조
+임베디드 타입 같은 값 타입을 여러 엔티티에서 공유하면 위험하다.
+<pre><code>
+member1.setHomeAddress(new Address("OldCity"));
+Address address = member1.getHomeAddress();
+
+address.setCity("NewCity");   //회원1의 address 값을 공유해서 사용
+member2.setHomeAddress(address);
+</code></pre>
+위의 코드를 실행하면 회원1과 회원2의 주소가 모두 "NewCity"로 변경되어 버린다. 이유는 회원1과 회원2가 같은 address 인스턴스를 참조하기 때문이다. 영속성 컨텍스트는 회원1과 회원2 둘 다 city속성이 변경된 것으로 판단해서 회원1, 회원2 각각 UPDATE SQL을 실행한다.    
+**이런 부작용을 막으려면 값을 복사해서 사용**하면 된다.
