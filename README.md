@@ -1130,3 +1130,25 @@ member2.setHomeAddress(address);
 </code></pre>
 위의 코드를 실행하면 회원1과 회원2의 주소가 모두 "NewCity"로 변경되어 버린다. 이유는 회원1과 회원2가 같은 address 인스턴스를 참조하기 때문이다. 영속성 컨텍스트는 회원1과 회원2 둘 다 city속성이 변경된 것으로 판단해서 회원1, 회원2 각각 UPDATE SQL을 실행한다.    
 **이런 부작용을 막으려면 값을 복사해서 사용**하면 된다.
+
+#### 값 타입 복사
+<pre><code>
+member1.setHomeAddress(new Address("OldCity"));
+Address address = member1.getHomeAddress());
+
+//회원1의 address 값을 복사해서 새로운 newAddress 값을 생성
+Address newAddress = address.clone();
+
+newAddress.setCity("NewCity");
+member2.setHomeAddress(newAddress);
+</code></pre>
+clone()메소드를 사용해서 자신을 복사해서 반환하도록 했다. 이렇게 하면 의도한 대로 회원2의 주소만 "NewCity"로 변경된다. 그리고 영속성 컨텍스트는 회원2의 주소만 변경된 것으로 판단해서 회원2에 대해서만 UPDATE SQL을 실행한다.    
+문제는 임베디드 타입처럼 직접 정의한 값 타입은 **자바의 기본 타입이 아니라 객체 타입**이라는 것이다. 객체를 대입할 때마다 인스턴스를 복사해서 대입하면 공유 참조를 피할 수 있다. **문제는 복사하지 않고 원본의 참조 값을 직접 넘기는 것을 막을 방법이 없다는 것이다.** 자바는 대입하려는 것이 값 타입인지 아닌지는 신경 쓰지 않는다. 단지 자바 기본 타입이면 값을 복사해서 넘기고, 객체면 참조를 넘길 뿐이다.
+<pre><code>
+Address a = new Address("Old");
+Address b = a.clone();    //항상 복사해서 넘겨야 한다.
+//Address b = a;    //이렇게 참조만 넘기면 부작용 발생할 수 있다.
+b.setCity("New");
+</code></pre>
+위의 방법대로 해야한다.   
+**객체의 공유 참조는 피할 수 없다** 따라서 근본적인 해결책은 객체의 값을 수정하지 못하도록 setCity()같은 수정자 메소드를 제거하는 것이다.
