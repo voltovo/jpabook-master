@@ -1185,3 +1185,10 @@ member2.setHomeAddress(newAddress);
 </code></pre>
 **참고로 Integer, String은 자바가 제공하는 대표적인 불변 객체이다.**
 
+### 값 타입의 비교
+* 동일성 비교 : 인스턴스의 참조 값을 비교, == 사용
+* 동등성 비교 : 인스턴스의 값을 비교, equals() 사용
+
+**참고**   
+자바에서 equals()를 재정의하면 hashCode()도 재정의하는 것이 안전하다. 그렇지 않으면 해시를 사용하는 컬렉션(HashSet, HashMap)이 정상 동작하지 않는다.
+
