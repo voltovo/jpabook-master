@@ -1152,3 +1152,36 @@ b.setCity("New");
 </code></pre>
 위의 방법대로 해야한다.   
 **객체의 공유 참조는 피할 수 없다** 따라서 근본적인 해결책은 객체의 값을 수정하지 못하도록 setCity()같은 수정자 메소드를 제거하는 것이다.
+
+#### 불변 객체
+객체를 불변하게 만들면 값을 수정할 수 없으므로 부작용을 원천 차단할 수 있다. 따라서 값 타입은 될 수 있으면 불변 객체로 설계해야 한다. 불변 객체의 값은 조회할 수 있지만 수정할 수 없다.   
+불변 객체를 구현하는 가장 간단한 방법은 생성자로만 값을 설정하고 수정자를 만들지 않는 것이다.
+<pre><code>
+@Embeddable
+public class Address{
+  private String city;
+
+  protected Address(){ } //JPA에서 기본 생성자는 필수다.
+
+  //생성자로 초기 값을 설정
+  public Address(String city){
+    this.city = city;
+  }
+
+  //접근자 Getter는 노출한다.
+  public String getCity(){
+    return city;
+  }
+
+  //수정자 Setter은 만들지 않는다.
+}
+</code></pre>
+불변 객체 사용
+<pre><code>
+Address address = member1.getHomeAddress();
+//회원1의 주소값을 조회해서 새로운 주소값을 생성
+Address newAddress = New Address(address.getCity());
+member2.setHomeAddress(newAddress);
+</code></pre>
+**참고로 Integer, String은 자바가 제공하는 대표적인 불변 객체이다.**
+
