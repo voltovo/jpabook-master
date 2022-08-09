@@ -1192,3 +1192,43 @@ member2.setHomeAddress(newAddress);
 **참고**   
 자바에서 equals()를 재정의하면 hashCode()도 재정의하는 것이 안전하다. 그렇지 않으면 해시를 사용하는 컬렉션(HashSet, HashMap)이 정상 동작하지 않는다.
 
+### 값 타입 컬렉션
+#### 값 타입 컬렉션 사용
+값 타입 컬렉션 등록
+<pre><code>
+Member member = new Member(); //INSERT SQL 1번 실행
+//임베디드 값 타입
+member.setHomeAddress(new Address("통영","뭉돌해수욕장","660-123"));
+//기본값 타입 컬렉션
+member.getFavoriteFoods().add("짬뽕");  //INSERT SQL 3번 실행
+member.getFavoriteFoods().add("짜장");
+member.getFavoriteFoods().add("탕수육");
+//임베디드 값 타입 컬렉션
+member.getAddressHistory().add(new Address("서울","강남","123-123"));   //INSERT SQL 2번 실행
+member.getAddressHistory().add(new Address("서울","강북","000-000"));
+
+em.persist(member);
+</code></pre>
+em.persist(member) 한 번 호출로 총 6번의 INSERT SQL을 실행.
+
+값 타입 수정
+<pre><code>
+Member member = em.find(Member.class, 1L);
+//임베디드 값 타입 수정
+member.setHomeAddress(new Address("새로운 도시","신도시1","123456"));
+
+//기본값 타입 컬렉션 수정
+Set< String> favoriteFoods = member.getFavoriteFoods();
+favoriteFoods.remove("탕수육");
+favoriteFoods.add("치킨");
+
+//임베디드 값 타입 컬렉션 수정
+List< Address> addressHistory = member.getAddressHistory();
+addressHistory.remove(new Address("서울","강남","123-123"));
+addressHistory.add(new Address("새로운 도시","새로운 주소","000-000"));
+</code></pre>
+
+1. 임베디드 값 타입 수정 : homeAddress 임베디드 값 타입은 MEMBER 테이블과 매핑했으므로 MEMBER 테이블만 UPDATE한다. 사실 member 엔티티를 수정하는 것과 같다.
+2. 기본값 타입 컬렉션 수정 : 탕수육을 치킨으로 변경하려면 탕수육을 제거하고 치킨을 추가해야 한다. 자바의 String 타입은 수정할 수 없다.
+3. 임베디드 값 타입 컬렉션 수정 : 값 타입은 불변해야 한다. 따라서 컬렉션에서 기존 주소를 삭제하고 새로운 주소로 등록했다. 참고로 값 타입은 equals, hashcode를 꼭 구현해야 한다.
+
