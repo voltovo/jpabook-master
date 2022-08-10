@@ -1268,3 +1268,38 @@ private List< AddressEntity> addressHistory = new ArrayList< AddressEntity>();
 오직 하나의 주인만이 관리해야 한다. 불변 객체로 만드는 것이 안전하다.
 
 
+## 객체지향 쿼리 언어
+### 객체지향 쿼리 소개
+JPQL의 특징
+* 테이블이 아닌 객체를 대상으로 검색하는 객체지향 쿼리
+* SQL을 추상화해서 특정 데이터베이스 SQL에 의존하지 않는다.
+
+JPA는 이 JPQL을 분석한 다음 적절한 SQL을 만들어 데이터베이스를 조회한다. 그리고 조회한 결과로 엔티티 객체를 생성해서 반환한다.
+
+JPA가 지원하는 다양한 검색 방법
+* JPQL
+* Criteria 쿼리 : JPQL을 편하게 작성하도록 도와주는 API, 빌더 클래스 모음
+* 네이티브 SQL : JPA에서 JPQL 대신 직접 SQL을 사용할 수 있다. (JPA 공식 지원 기능 X)
+* QueryDSL : Criteria쿼리처럼 JPQL을 편하게 작성하도록 도와주는 빌더 클래스 모음, 비표준 오픈소스 프레임워크
+* JDBC 직접 사용, MyBatis 같은 SQL 매퍼 프레임워크 사용 : 필요하면 JDBC 직접 사용.
+
+#### JPQL 소개
+**JPQL은 엔티티 객체를 조회하는 객체지향 쿼리다** 문법은 SQL과 비슷하고 ANSI표준 SQL이 제공하는 기능을 유사하게 지원한다.
+**JPQL은 SQL을 추상화해서 특정 데이터베이스에 의존하지 않는다.** 데이터베이스 방언만 변경하면 JPQL을 수정하지 않아도 자연스럽게 데이터베이스를 변경할 수 있다.   
+**JPQL은 SQL보다 간결하다** 엔티티 직접 조회, 묵시적 조인, 다형성 지원으로 SQL보다 코드가 간결하다.
+<pre><code>
+//회원 엔티티
+@Entity(name="Member") //name 속성의 기본값은 클래스명
+public class Member{
+  @Column(name="name")
+  private String username;
+}
+
+//JPQL 사용
+//쿼리 생성
+String jpql = "select m from Member as m where m.username = 'kim'";
+List< Member> resultList = 
+    em.createQuery(jpql, Member.class).getResultList();
+</code></pre>
+em.createQuery() 메소드에 실행한 JPQL과 반환할 엔티티의 클래스 타입인 Member.class를 넘겨주고 getResultList()메소드를 실행하면 JPA는 JPQL을 SQL로 변환해서 데이터베이스를 조회한다. 그리고 조회한 결과를 Member 엔티티를 생성해서 반환한다.
+
