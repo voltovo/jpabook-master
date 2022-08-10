@@ -1232,3 +1232,20 @@ addressHistory.add(new Address("새로운 도시","새로운 주소","000-000"))
 2. 기본값 타입 컬렉션 수정 : 탕수육을 치킨으로 변경하려면 탕수육을 제거하고 치킨을 추가해야 한다. 자바의 String 타입은 수정할 수 없다.
 3. 임베디드 값 타입 컬렉션 수정 : 값 타입은 불변해야 한다. 따라서 컬렉션에서 기존 주소를 삭제하고 새로운 주소로 등록했다. 참고로 값 타입은 equals, hashcode를 꼭 구현해야 한다.
 
+#### 값 타입 컬렉션의 제약사항
+값 타입은 식별자라는 개념이 없고 단순한 값들의 모음이므로 값을 변경해버리면 데이터베이스에 저장된 원본 데이터를 찾기는 어렵다.   
+특정 엔티티 하나에 소속된 값 타입은 값이 변경되어도 자신이 소속된 엔티티를 데이터베이스에서 찾고 값을 변경하면 된다. 문제는 값 컬렉션이다. JPA는 이 문제를 해결하기 위해 구현체들은 값 타입 컬력션에 변경 사항이 발생하면 값 타입 컬렉션이 매핑된 테이블의 연관된 모든 데이터를 삭제하고 현재 값 타입 컬렉션 객체에 있는 모든 값을 데이터베이스에 다시 저장한다. 따라서 실무에서는 값 타입 컬렉션이 매핑된 테이블에 데이터가 많다면 값 타입 컬렉션 대신에 일대다 관계를 고려해야 한다. 일대다 관계에 추가로 영속성 전이(Cascade) + 고아 객체 제거(ORPHAN REMOVE)기능을 적용하면 값 타입 컬렉션처럼 사용할 수 있다.
+<pre><code>
+@Entity
+public class AddressEntity{
+  @Id @GeneratedValue
+  private Long id;
+
+  @Embedded Address address;
+}
+
+@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+@JoinColumn(name = "MEMBER_ID")
+private List< AddressEntity> addressHistory = new ArrayList< AddressEntity>();
+</code></pre>
+
