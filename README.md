@@ -1327,3 +1327,19 @@ List< Member> resultList = em.createQuery(cq).getResultList();
 </code></pre>
 **Criteria가 가진 장점이 많지만 모든 장점을 상쇄할 정도로 복잡하고 장황하다. 따라서 사용하기 불편한 건 물론이고 Criteria로 작성한 코드도 한눈에 들어오지 않는 단점이 있다**
 
+#### QueryDSL 소개
+QueryDSL의 장점은 코드 기반이면서 단순하고 사용하기 쉽다. 그리고 작성한 코드도 JPQL과 비슷해서 한눈에 들어온다.    
+**QueryDSL은 JPA 표준은 아니고 오픈소스 프로젝트다.**
+<pre><code>
+//QueryDSL
+//준비
+JPAQuery query = new JPAQuery(em);
+QMember member = QMember.member;
+
+//쿼리, 결과조회
+List< Member> members = query.from(member)
+                          .where(member.username.eq("kim"))
+                          .list(member);
+</code></pre>
+QueryDSL도 어노테이션 프로세서를 사용해서 쿼리 전용 클래스를 만들어야 한다. QMember는 Member 엔티티 클래스를 기반으로 생성한 QueryDSL 쿼리 전용 클래스다.
+
