@@ -1303,3 +1303,27 @@ List< Member> resultList =
 </code></pre>
 em.createQuery() 메소드에 실행한 JPQL과 반환할 엔티티의 클래스 타입인 Member.class를 넘겨주고 getResultList()메소드를 실행하면 JPA는 JPQL을 SQL로 변환해서 데이터베이스를 조회한다. 그리고 조회한 결과를 Member 엔티티를 생성해서 반환한다.
 
+#### Criteria 쿼리 소개
+Criteria의 장점은 문자가 아닌 query.select(m).where(...)처럼 프로그래밍 코드로 JPQL을 작성할 수 있다는 점이다.   
+문자로 쿼리를 작성한 경우 오타가 발생할 수 있다. 물론 컴파일은 성공하지만 해당 쿼리가 실행하는 시점에 런타임 오류가 발생한다. 반면에 Criteria는 문자가 아닌 코드로 JPQL을 작성한다. 따라서 컴파일 시점에 오류를 발견할 수 있다.
+
+* Criteria 장점    
+컴파일 시점에 오류를 발견할 수 있다.    
+IDE를 사용하면 코드 자동완성을 지원한다.   
+동적 쿼리를 작성하기 편하다
+
+<pre><code>
+//Criteria 사용 준비
+CriteriaBuilder cb = em.getCriteriaBuilder();
+CriteriaQuery< Member> query = cb.createQuery(Member.class);
+
+//루트 클래스(조회를 시작할 클래스)
+Root< Member> m = query.from(Member.class);
+
+//쿼리 생성
+CriteriaQuery< Member> cq =
+    query.select(m).where(cb.equal(m.get("username"), "kim"));
+List< Member> resultList = em.createQuery(cq).getResultList();
+</code></pre>
+**Criteria가 가진 장점이 많지만 모든 장점을 상쇄할 정도로 복잡하고 장황하다. 따라서 사용하기 불편한 건 물론이고 Criteria로 작성한 코드도 한눈에 들어오지 않는 단점이 있다**
+
