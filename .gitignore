@@ -91,3 +91,6 @@ com_crashlytics_export_strings.xml
 crashlytics.properties
 crashlytics-build.properties
 
+# apple 전용 ds_store
+.DS_Store
+
