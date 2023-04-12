@@ -36,28 +36,43 @@ public class JpaMain {
 
     public static void logic(EntityManager em) {
 
-        String id = "id1";
         Member member = new Member();
-        member.setId(id);
+        member.setId("member1");
         member.setUsername("suman");
-        member.setAge(30);
 
         //등록
         em.persist(member);
 
-        //수정
-        member.setAge(20);
+        //조회
+        Member findMember = em.find(Member.class, "member1");
 
-        //한 건 조회
-        Member findMember = em.find(Member.class, id);
-        System.out.println("findMember=" + findMember.getUsername() + ", age=" + findMember.getAge());
+        // 출력
+        System.out.println("findMember.id = " + findMember.getId());
 
-        //목록 조회
-        List<Member> members = em.createQuery("select m from Member m", Member.class).getResultList();
-        System.out.println("members.size=" + members.size());
+        Member member2 = new Member();
+        member2.setId("member2");
+        member2.setUsername("suman2");
 
-        //삭제
-        em.remove(member);
+        //등록
+        em.persist(member2);
 
+        //조회
+        Member findMember2 = em.find(Member.class, "member2");
+
+        // 출력
+        System.out.println("findMember2.id = " + findMember2.getId());
+
+        Member member3 = new Member();
+        member3.setId("member3");
+        member3.setUsername("suman3");
+
+        //등록
+        em.persist(member3);
+
+        //조회
+        Member findMember3 = em.find(Member.class, "member3");
+
+        // 출력
+        System.out.println("findMember3.id = " + findMember3.getId());
     }
 }
