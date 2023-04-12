@@ -23,6 +23,7 @@ public class JpaMain {
             tx.begin(); //트랜잭션 시작
             logic(em);  //비즈니스 로직
             tx.commit();//트랜잭션 커밋
+            logic2(em);  //비즈니스 로직
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -36,43 +37,24 @@ public class JpaMain {
 
     public static void logic(EntityManager em) {
 
+        //회원 엔티티 생성, 비영속 상태
         Member member = new Member();
-        member.setId("member1");
-        member.setUsername("suman");
+        member.setId("memberA");
+        member.setUsername("회원A");
 
-        //등록
+        // 영속 상태
         em.persist(member);
 
-        //조회
-        Member findMember = em.find(Member.class, "member1");
+    }
 
-        // 출력
-        System.out.println("findMember.id = " + findMember.getId());
+    public static void logic2(EntityManager em){
+        // 조회
+        Member findMember = em.find(Member.class, "memberA");
+        System.out.println("findMember.name = " + findMember.getUsername());
 
-        Member member2 = new Member();
-        member2.setId("member2");
-        member2.setUsername("suman2");
+        // 영속성 컨텍스트 초기화
+        em.clear();
 
-        //등록
-        em.persist(member2);
-
-        //조회
-        Member findMember2 = em.find(Member.class, "member2");
-
-        // 출력
-        System.out.println("findMember2.id = " + findMember2.getId());
-
-        Member member3 = new Member();
-        member3.setId("member3");
-        member3.setUsername("suman3");
-
-        //등록
-        em.persist(member3);
-
-        //조회
-        Member findMember3 = em.find(Member.class, "member3");
-
-        // 출력
-        System.out.println("findMember3.id = " + findMember3.getId());
+        findMember.setUsername("changeName");
     }
 }
