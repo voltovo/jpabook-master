@@ -20,7 +20,8 @@ public class Order {
     @Column(name = "MEMBER_ID")
     private Long memberId;
 
-    private LocalDate orderDate;     //주문시간
+    @Temporal(TemporalType.TIMESTAMP)
+    private LocalDateTime orderDate;     //주문시간
 
     @Enumerated(EnumType.STRING)
     private OrderStatus status;//주문상태
@@ -50,11 +51,11 @@ public class Order {
         this.status = status;
     }
 
-    public LocalDate getOrderDate() {
+    public LocalDateTime getOrderDate() {
         return this.orderDate;
     }
 
-    public void setOrderDate(LocalDate orderDate) {
+    public void setOrderDate(LocalDateTime orderDate) {
         this.orderDate = orderDate;
     }
    
